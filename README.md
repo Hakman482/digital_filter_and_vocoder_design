@@ -37,6 +37,38 @@ The work focuses on interpreting **magnitude, phase, and group delay** responses
   - High forced orders (e.g., N=50 or N=100) show numerical/conditioning issues in code and pathological delay behaviour in the app
 
 ---
+## Results snapshot
+
+### Speech vocoder (MATLAB)
+
+| Original (spectrum) | Envelope extraction (LPF @ 160 Hz) |
+|---|---|
+| ![](results/figures/vocoder_original.png) | ![](results/figures/vocoder_lowpass.png) |
+| *Baseline speech spectrum with clear low-frequency concentration and formant/harmonic structure.* | *Rectification + 160 Hz LPF yields the smooth amplitude envelope used to control the carrier.* |
+
+| Noise carrier modulation (spectrum) | Vocoder output (spectrum) |
+|---|---|
+| ![](results/figures/vocoder_white_noise.png) | ![](results/figures/vocoder_output.png) |
+| *Envelope-shaped noise shows broadband energy whose amplitude follows speech dynamics.* | *Output becomes noise-like (harmonics removed) while retaining overall spectral shaping for intelligibility.* |
+
+---
+
+### Digital filter design (FIR vs IIR)
+
+| FIR: density factor comparison (df=20 vs df=50) | FIR: min order vs N=100 (magnitude/phase/group delay) |
+|---|---|
+| ![](results/figures/Task1_FIR_LPF_dense_20_50.png) | ![](results/figures/Task2_FIR_HPF_order_min_100.png) |
+| *df=20 and df=50 overlap → density mainly affects grid/plot resolution, not the true response.* | *Higher FIR order improves selectivity/attenuation but increases constant group delay (≈ N/2).* |
+
+| FIR: order sweep (N=100 vs N=130) | IIR elliptic: min-order bandpass (nonlinear phase & delay peaks) |
+|---|---|
+| ![](results/figures/Task7_FIR_BPF_compare_100_130.png) | ![](results/figures/Task6_IIR_BPF_order_min.png) |
+| *N=130 gives slightly sharper skirts/deeper stopband than N=100, with higher constant delay.* | *Low-order elliptic IIR is magnitude-efficient but shows frequency-dependent delay (nonlinear phase).* |
+
+**Takeaway:** FIR ⇒ linear phase + predictable constant delay; IIR elliptic ⇒ lower order for sharp magnitude specs but nonlinear phase/delay variation; vocoding preserves intelligibility via envelope extraction and noise-carrier modulation.
+
+
+
 
 ## Repository layout
 - `src/` — MATLAB source code (vocoder + filter design)
